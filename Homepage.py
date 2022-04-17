@@ -18,3 +18,4 @@ def about():
     # Resources
     """)
     st.info("""[Open Disease API](https://disease.sh/) """)
+    st.info("""[Our World in Data](https://ourworldindata.org/epi-curve-covid-19) """)

@@ -6,12 +6,12 @@ import Homepage
 import world_statistics
 
 st.set_page_config(
-    page_title="Project 2 - Streamlit App",
+    page_title="COVID-19 Data Explorer - Streamlit App",
     layout="wide",
     menu_items={
         'Get Help': 'https://www.extremelycoolapp.com/help',
         'Report a bug': "https://www.extremelycoolapp.com/bug",
-        'About': "# This is a header. "
+        'About': "# COVID-19 Data Explorer. "
     }
 )
 

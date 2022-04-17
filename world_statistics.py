@@ -5,11 +5,6 @@ from datetime import date, time, datetime
 import requests
 import plotly.express as px
 
-import math
-import altair as alt
-import pydeck as pdk
-import generic
-
 
 def worldwide():
     # containers
@@ -110,7 +105,6 @@ def worldwide():
         #st.line_chart(df)
 
 
-
 def covid_sta():
     global state_selected
 
@@ -180,7 +174,7 @@ def covid_sta():
         st.write("Deaths Per One Million: ", states_dict['deathsPerOneMillion'])
 
 
-        #################### MAP #######################
+        """#################### MAP #######################
         geo = requests.get("https://gist.githubusercontent.com/meiqimichelle/7727723/raw/"
                            "0109432d22f28fd1a669a3fd113e41c4193dbb5d/USstates_avg_latLong")
         geo_dict = geo.json()
@@ -193,46 +187,70 @@ def covid_sta():
         #st.write("MAP")
         df = pd.DataFrame(
             np.random.randn(states_dict['active'], 2) / [1, 1] + [lat, long],
-            columns=['lat', 'lon'])
+            columns=['lat', 'lon'])"""
         st.write("Active Cases: ", states_dict['active'])
         #st.map(df)
 
     # open sta for countries
     else:
+
+        #containers
+        header = st.container()
+        features = st.container()
+
         country_historical_url = "https://disease.sh/v3/covid-19/countries/{0}".format(country_selected)
         country_sta_dic = requests.get(country_historical_url).json()
 
-        st.title(country_sta_dic['country'])
 
-        col1, col2, col3, col4 = st.columns([2, 2, 2, 2])
-        # Display metrics
-        col2.metric("Cases", country_sta_dic['cases'], country_sta_dic['todayCases'])
-        col3.metric("Deaths", country_sta_dic['deaths'], country_sta_dic['todayDeaths'])
-        col4.metric("Recovered", country_sta_dic['recovered'], country_sta_dic['todayRecovered'])
+
+        with header:
+            st.title(country_sta_dic['country'])
+            col1, col2, col3, col4 = st.columns([2, 2, 2, 2])
+            col1.image(country_sta_dic['countryInfo']['flag'], width=150)
+            # Display metrics
+            col2.metric("Cases", country_sta_dic['cases'], country_sta_dic['todayCases'])
+            col3.metric("Deaths", country_sta_dic['deaths'], country_sta_dic['todayDeaths'])
+            col4.metric("Recovered", country_sta_dic['recovered'], country_sta_dic['todayRecovered'])
+
+
         # Display STA for country
-        with col1:
-            st.image(country_sta_dic['countryInfo']['flag'], width=150)
+        with features:
+            with col1:
 
-            st.write("""""")
-            st.write("""""")
-            st.write("""""")
-            st.write("""""")
-            st.text("Statistics totals")
-            st.write("Cases: ", country_sta_dic['cases'])
-            st.write("Cases today: ", country_sta_dic['todayCases'])
-            st.write("Deaths: ", country_sta_dic['deaths'])
-            st.write("Deaths today: ", country_sta_dic['todayDeaths'])
-            st.write("Recovered: ", country_sta_dic['recovered'])
-            st.write("Recovered today: ", country_sta_dic['todayRecovered'])
-            st.write("Active: ", country_sta_dic['active'])
-            st.write("Critical: ", country_sta_dic['critical'])
+                st.write("""""")
+                st.write("""""")
+                st.write("""""")
+                st.write("""""")
+                st.text("Statistics totals")
+                st.write("Cases: ", country_sta_dic['cases'])
+                st.write("Cases today: ", country_sta_dic['todayCases'])
+                st.write("Deaths: ", country_sta_dic['deaths'])
+                st.write("Deaths today: ", country_sta_dic['todayDeaths'])
+                st.write("Recovered: ", country_sta_dic['recovered'])
+                st.write("Recovered today: ", country_sta_dic['todayRecovered'])
+                st.write("Active: ", country_sta_dic['active'])
+                st.write("Critical: ", country_sta_dic['critical'])
 
-            # display STA for vaccines
-            vaccines_url = "https://disease.sh/v3/covid-19/vaccine/coverage/countries/{0}?lastdays=1&fullData=true".format(
-                country_selected)
-            vaccines_dic = requests.get(vaccines_url).json()
-            vaccines = []
-            for i in vaccines_dic["timeline"]:
-                vaccines.append(i["total"])
+                # display STA for vaccines
+                vaccines_url = "https://disease.sh/v3/covid-19/vaccine/coverage/countries/{0}?lastdays=1&fullData=true".format(
+                    country_selected)
+                vaccines_dic = requests.get(vaccines_url).json()
+                vaccines = []
+                for i in vaccines_dic["timeline"]:
+                    vaccines.append(i["total"])
 
-            st.write("Vaccines rolled our: ", vaccines[0])
+                st.write("Vaccines rolled our: ", vaccines[0])
+
+            with col2:
+                countries_historical_url = "https://disease.sh/v3/covid-19/historical/{0}?lastdays=all".format(country_selected)
+                countries_sta_dic = requests.get(countries_historical_url).json()
+                c_pairs = countries_sta_dic["timeline"]
+                w_cases = []
+                #st.dataframe(c_pairs)
+                #st.dataframe(c_pairs)
+
+                df = pd.DataFrame.from_dict(c_pairs)
+                #st.write(df)
+                fig1 = px.line(df, y="cases", range_y=[0, country_sta_dic['cases']])
+                st.write(" ")
+                st.write(fig1)
