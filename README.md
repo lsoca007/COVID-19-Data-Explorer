@@ -18,3 +18,5 @@ https://ourworldindata.org/epi-curve-covid-19
 
 
 ![World Statistics](worldwide.png)
+
+![USA Statistics](USA_Sta.png)
