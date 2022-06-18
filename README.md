@@ -14,6 +14,7 @@ For general information including symptoms, testing, and community safety, visit
 
 ### Resources
 https://disease.sh/
+\
 https://ourworldindata.org/epi-curve-covid-19
 
 
